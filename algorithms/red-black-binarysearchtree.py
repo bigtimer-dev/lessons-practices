@@ -49,8 +49,17 @@ class RBtree:
                 node_to_rotate_right_child  # and my new father is my ex child
             )
 
+        # method to rotate to right the node
         def right_rotation(self, node_to_rotate):
-            node_to_rotate_left_child = node_to_rotate.left  # my left child
-            node_to_rotate.left = (
-                node_to_rotate_left_child.right
-            )  # my ex child right is now my left
+            ex_child = node_to_rotate.left
+            node_to_rotate.left = ex_child.right
+            if ex_child != self.nil:
+                ex_child.right.parent = node_to_rotate
+            ex_child.parent = node_to_rotate.parent
+            if node_to_rotate.parent is None:
+                self.root = ex_child
+            elif node_to_rotate.parent == node_to_rotate.parent.left:
+                node_to_rotate.parent.left = ex_child
+            else:
+                node_to_rotate.parent.right = ex_child
+            node_to_rotate.parent = ex_child
