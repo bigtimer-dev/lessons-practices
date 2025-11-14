@@ -12,6 +12,19 @@ class Rbtree:
         self.nil = Node(None)
         self.root = self.nil
 
+    def exists(self, data):
+        current = self.root
+        while current != self.nil or current.data != data:
+            if current.data < data:
+                current = current.left
+            elif current.data > data:
+                current = current.right
+
+        if current.data == data:
+            return current
+        else:
+            return "The node does not exists"
+
     def insert(self, data):
         new_node = Node(data)
         new_node.color = "Red"
