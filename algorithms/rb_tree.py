@@ -17,11 +17,10 @@ class BTSRB:
         self.nil = Node(None)
         self.root = self.nil
 
-
     # check if a node exists
     def exists(self, data):
         current = self.root
-        while current != self.nil or current.val != data:
+        while current != self.nil or current.data != data:
             if data < current.data:
                 current = current.left
             else:
@@ -56,9 +55,40 @@ class BTSRB:
         self.insert_fixup(new_node)
 
     def insert_fixup(self, new_node):
-
-
-
+        while new_node != self.root and new_node.parent.color:
+            parent = new_node.parent
+            grand_parent = parent.parent
+            if parent == grand_parent.right:
+                uncle = grand_parent.left
+                if uncle.color:
+                    uncle.color = False
+                    parent.color = False
+                    grand_parent.color = True
+                    new_node = grand_parent
+                elif not uncle.color:
+                    if new_node == parent.left:
+                        new_node = parent
+                        self.rotate_right(new_node)
+                        parent = new_node.parent
+                    parent.color = False
+                    grand_parent.color = True
+                    self.rotate_left(grand_parent)
+            elif parent == grand_parent.left:
+                uncle = grand_parent.right
+                if uncle.color:
+                    uncle.color = False
+                    parent.color = False
+                    grand_parent.color = True
+                    new_node = grand_parent
+                elif not uncle.color:
+                    if new_node == parent.right:
+                        new_node = parent
+                        self.rotate_left(new_node)
+                        parent = new_node.parent
+                    parent.color = False
+                    grand_parent.color = True
+                    self.rotate_right(grand_parent)
+        self.root.color = False
 
     # rotate right the node
     def rotate_right(self, x):
@@ -68,7 +98,7 @@ class BTSRB:
             return
 
         y = x.left
-        x.right = y.right
+        x.left = y.right
         if y.right != self.nil:
             y.right.parent = x
         y.parent = x.parent
