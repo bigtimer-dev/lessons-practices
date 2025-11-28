@@ -1,4 +1,5 @@
 class Node:
+    # Nodes that are inserted in the tree
     def __init__(self, data):
         self.data = data
         self.color = "Black"
@@ -8,23 +9,30 @@ class Node:
 
 
 class Rbtree:
+    # root of tree initial settings
     def __init__(self):
         self.nil = Node(None)
         self.root = self.nil
 
-    def exists(self, data):
-        current = self.root
-        while current != self.nil or current.data != data:
-            if current.data < data:
-                current = current.left
-            elif current.data > data:
-                current = current.right
-
-        if current.data == data:
-            return current
+    # search for a Node with the same data
+    def search(self, node, data):
+        if node.data == data or node == self.nil:
+            return node
+        elif node.data > data:
+            return self.search(node.left, data)
         else:
-            return "The node does not exists"
+            return self.search(node.right, data)
 
+    # get min from a given node
+    def min(self, node):
+        if node == self.nil:
+            return node
+        elif node.data is not None and node.left == self.nil:
+            return node
+        else:
+            return self.min(node.left)
+
+    # insert a new_node to the tree
     def insert(self, data):
         new_node = Node(data)
         new_node.color = "Red"
@@ -55,6 +63,7 @@ class Rbtree:
         else:
             parent.left = new_node
 
+    # fix the new node inserted
     def fix_insert(self, new_node):
         while new_node != self.root and new_node.parent.color == "Red":
             parent = new_node.parent
@@ -97,6 +106,7 @@ class Rbtree:
 
         self.root.color = "Black"
 
+    # rotate left a node
     def left_rotation(self, new_node):
         if new_node == self.nil or new_node.right == self.nil:
             return
@@ -121,6 +131,7 @@ class Rbtree:
         new_node.parent = new_node_child
         new_node_child.left = new_node
 
+    # rotate right a node
     def right_rotation(self, new_node):
         if new_node == self.nil or new_node.left == self.nil:
             return
